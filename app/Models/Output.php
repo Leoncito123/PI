@@ -13,14 +13,13 @@ class Output extends Model
         'dev_id',
         'status',
         'type_id'
-
     ];
 
-    public function device(){
-        return $this->belongsTo(Device::class, 'device_id');
+    public function devices(){
+        return $this->belongsTo(Device::class, 'dev_id');
     }
 
-    public function type(){
-        return $this->belongsTo(Type::class, 'type:id');
+    public function types(){
+        return $this->belongsTo(Type::class, 'type_id');
     }
 }

@@ -20,13 +20,13 @@ class Summaries extends Model
     }
 
     //Funcion para la relacion del modelo de Summaries con el modelo de Ubications
-    public function ubication(){
+    public function ubications(){
         return $this->belongsTo(Ubication::class, 'ubication_id');
     }
 
     //Funcion para la relacion del modelo de Summaries con el modelo de Macaddress
-    public function maccaddress(){
-        return $this->belongsTo(Macaddress::class, 'macaddress_id'); 
+    public function macaddress(){
+        return $this->belongsTo(Macaddress::class, 'macaddress_id');
     }
 
     //Funcion para la relacion del modelo de Summaries con el modelo de Types

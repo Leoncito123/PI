@@ -13,7 +13,7 @@ class Device extends Model
         'ubication_id'
     ];
 
-    public function ubication_id (){
+    public function ubications (){
         return $this->belongsTo(Ubication::class, 'ubication_id');
     }
 

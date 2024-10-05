@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('sector');
             $table->string('longitude');
             $table->string('latitude');
-            
             $table->timestamps();
         });
     }

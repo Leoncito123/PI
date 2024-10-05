@@ -10,13 +10,17 @@ class Macaddress extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'macadddress',
+        'macaddress',
         'sector',
         'longitude',
         'latitude'
     ];
 
-    public function summary(){
-        return $this->belongsTo(Summaries::class, 'macaddress_id');
+    public function summaries(){
+        return $this->hasMany(Summaries::class, 'macaddress_id');
+    }
+
+    public function ubications(){
+        return $this->belongsToMany(Ubication::class, 'ubication_id');
     }
 }

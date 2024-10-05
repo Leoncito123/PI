@@ -15,9 +15,18 @@ class Ubication extends Model
         'latitude'
     ];
 
-    public function summarie()
+    public function user()
     {
-        return $this->belongsTo(Summaries::class, 'id_summary');
+        return $this->belongsTo(User::class);
+    }
+
+    public function summaries()
+    {
+        return $this->hasMany(Summaries::class, 'ubication_id');
+    }
+
+    public function devices(){
+        return $this->belongsToMany(Macaddress::class, 'ubication_id'); 
     }
 
 }
