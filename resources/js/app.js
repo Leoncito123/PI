@@ -2,8 +2,8 @@ import './bootstrap';
 
 import Alpine from 'alpinejs';
 
-import 'flowbite'
+import ApexCharts from 'apexcharts'
 
-window.Alpine = Alpine;
+import 'flowbite'
 
 Alpine.start();

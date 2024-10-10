@@ -33,9 +33,7 @@ class OutputController extends Controller
 
     public function createView()
     {
-        $devices = Device::all();
-        $types = Type::all();
-        return view('admin.creates.output', compact('devices', 'types'));
+       
     }
 
     public function create(Request $request)

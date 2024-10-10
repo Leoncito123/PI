@@ -37,6 +37,7 @@ Route::group(['middleware' => ['role:admin|supervisor']],function () {
     Route::get('/admin/users', [UserController::class, 'index'])->name('admin.users');
     Route::get('/admin/outputs', [OutputController::class, 'index'])->name('admin.outputs');
     Route::get('/admin/devices', [DeviceController::class, 'index'])->name('admin.devices');
+    Route::get('/admin/infoUbication', [UbicationController::class, 'infoUbication'])->name('admin.infoUbication');
 
     //Rutas para la vista de creación de items
     Route::get('/admin/create/sens', [SensController::class, 'createView'])->name('admin.create.sens');

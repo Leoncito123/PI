@@ -41,4 +41,9 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Type::class, 'user_type');
     }
+
+    public function getRoleAttribute()
+    {
+        return $this->roles->first()->name ?? 'guest';
+    }
 }
