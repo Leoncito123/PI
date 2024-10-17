@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\MapController;
 use App\Http\Controllers\OutputController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SensController;
@@ -82,6 +83,11 @@ Route::group(['middleware' => ['role:admin|supervisor']], function () {
   Route::delete('/admin/delete/device/{id}', [DeviceController::class, 'destroy'])->name('admin.delete.device');
   Route::delete('/admin/delete/ubication/{id}', [UbicationController::class, 'destroy'])->name('admin.delete.ubication');
   //Fin de las rutas de administración
+});
+
+//Rutas para todos los roles 
+Route::group(['middleware' => ['role:admin|supervisor|worker']], function () {
+  Route::get('/map', [MapController::class, 'index'])->name('map');
 });
 
 require __DIR__ . '/auth.php';
