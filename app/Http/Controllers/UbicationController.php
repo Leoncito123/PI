@@ -15,7 +15,7 @@ use App\Models\User;
 class UbicationController extends Controller
 {
     public function index()
-    {   
+    {
         if(auth()->user()->hasRole('supervisor')){
             return redirect()->route('admin.infoUbication');
         }else{
@@ -27,7 +27,7 @@ class UbicationController extends Controller
     public function createView()
     {
         $supervisores = User::role('supervisor')->get();
-        
+
         return view('admin.creates.ubication', compact('supervisores'));
     }
 
@@ -36,7 +36,7 @@ class UbicationController extends Controller
         if (auth()->user()->hasRole('supervisor')) {
             return redirect()->route('admin.ubications');
         }
-    
+
         $request->validate([
             'name' => 'required',
             'sector' => 'required',
@@ -44,17 +44,17 @@ class UbicationController extends Controller
             'latitude' => 'required',
             'supervisor_id' => 'required|exists:users,id'
         ]);
-    
+
         $ubication = Ubication::create([
             'name' => $request->name,
             'sector' => $request->sector,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude
         ]);
-    
+
         $supervisor = User::find($request->supervisor_id);
         $supervisor->ubications()->attach($ubication->id);
-    
+
         return redirect()->route('admin.ubications');
     }
 
@@ -72,7 +72,7 @@ class UbicationController extends Controller
         if (auth()->user()->hasRole('supervisor') && !auth()->user()->ubications->contains($ubication)) {
             return redirect()->route('admin.ubications');
         }
-    
+
         $request->validate([
             'name' => 'required',
             'sector' => 'required',
@@ -80,22 +80,22 @@ class UbicationController extends Controller
             'latitude' => 'required',
             'supervisor_id' => 'required|exists:users,id'
         ]);
-    
+
         $ubication->update([
             'name' => $request->name,
             'sector' => $request->sector,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude
         ]);
-    
+
         // Actualizar el supervisor
         $ubication->users()->detach(); // Elimina todas las asociaciones actuales
         $supervisor = User::find($request->supervisor_id);
         $supervisor->ubications()->attach($ubication->id);
-    
+
         return redirect()->route('admin.ubications');
     }
-    
+
     public function destroy($id)
     {
         Ubication::destroy($id);
@@ -106,33 +106,33 @@ class UbicationController extends Controller
     {
         $user = auth()->user();
         $isAdmin = !$user->hasRole('supervisor');
-    
+
         if ($isAdmin) {
             $ubications = Ubication::all();
         } else {
             $ubications = $user->ubications;
         }
-    
+
         $chartData = [];
         $allSensorTypes = collect();
-    
+
         foreach ($ubications as $ubication) {
             $sensors = Summaries::where('ubication_id', $ubication->id)
                 ->with('type')
                 ->get();
-    
+
             $sensorCounts = $sensors->groupBy('type.name')->map->count();
-            
+
             $chartData[] = [
                 'name' => $ubication->name,
                 'data' => $sensorCounts->values()->toArray(),
             ];
-    
+
             $allSensorTypes = $allSensorTypes->merge($sensors->pluck('type.name')->unique());
         }
-    
+
         $sensorTypes = $allSensorTypes->unique()->values()->toArray();
-    
+
         // Asegurarse de que cada ubicación tenga un valor para cada tipo de sensor
         foreach ($chartData as &$locationData) {
             $data = array_fill_keys($sensorTypes, 0);
@@ -141,7 +141,7 @@ class UbicationController extends Controller
             }
             $locationData['data'] = array_values($data);
         }
-    
+
         return view('admin.infoUbication', compact('ubications', 'chartData', 'sensorTypes'));
     }
 }
