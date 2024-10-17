@@ -34,12 +34,12 @@ class User extends Authenticatable
 
     public function ubications(): BelongsToMany
     {
-        return $this->belongsToMany(Ubication::class, 'user_ubication');
+        return $this->belongsToMany(Ubication::class, 'user_ubications');
     }
 
     public function types(): BelongsToMany
     {
-        return $this->belongsToMany(Type::class, 'user_type');
+        return $this->belongsToMany(Type::class, 'user_types');
     }
 
     public function getRoleAttribute()
