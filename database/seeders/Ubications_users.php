@@ -15,14 +15,16 @@ class Ubications_users extends Seeder
      */
     public function run(): void
     {
-        // Crear ubicaciones
-        for ($i = 1; $i <= 10; $i++) {
-            Ubication::create([
-                'name' => "Ubicación_$i",
-                'sector' => "Sector_$i",
-                'longitude' => '-100.405957',
-                'latitude' => '20.552917',
-            ]);
+        //Ubicaciones
+        foreach (range(1, 10) as $index) {
+            foreach (range(1, 2) as $index2) {
+                Ubication::create([
+                    'name' => "Ubicación_$index",
+                    'sector' => "Sector_$index2",
+                    'longitude' => '-100.405957',
+                    'latitude' => '20.552917',
+                ]);
+            }
         }
 
         $ubications = Ubication::select('id')->get();
