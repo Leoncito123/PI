@@ -4,6 +4,37 @@
             {{ __('Administrador/Tarjetas') }}
         </h2>
     </x-slot>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: "{{ session('success') }}",
+                confirmButtonText: 'Ok'
+            });
+        </script>
+    @endif
+
+    @if (session('edit'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: "{{ session('edit') }}",
+                confirmButtonText: 'Ok'
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "{{ session('error') }}",
+            });
+        </script>
+    @endif
     <div class="flex items-center justify-end mb-4">
         <a href="{{ route('admin.create.output') }}"
             class="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-700">Crear Tarjetas</a>
@@ -32,9 +63,12 @@
                         <td>{{ $output->devices->name }}</td>
                         <td>{{ $output->types->name }}</td>
                         @if ($output->status === 1)
-                            <td> <strong class="text-green bg-green-100 dark:text-green dark:bg-green p-2 rounded-md"> Encendido</strong></td>
+                            <td> <strong class="text-green bg-green-100 dark:text-green dark:bg-green p-2 rounded-md">
+                                    Encendido</strong></td>
                         @else
-                            <td><strong  class="text-red-900 bg-red-200 dark:text-red-900 dark:bg-red-200 p-2 rounded-md">Apagado</strong></td>
+                            <td><strong
+                                    class="text-red-900 bg-red-200 dark:text-red-900 dark:bg-red-200 p-2 rounded-md">Apagado</strong>
+                            </td>
                         @endif
                         <td>
                             <a href="{{ route('admin.edit.output', $output->id) }}">
@@ -48,22 +82,17 @@
                             </a>
                         </td>
                         <td>
-                            <form action="{{ route('admin.delete.output', ['id' => $output->id]) }}" method="POST"
-                                onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta ubicación?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                    class="font-medium bg-intenso text-white hover:bg-red-500 dark:text-white
+                            <button onclick="eliminarElemento({{ $output->id }})"
+                                class="font-medium bg-intenso text-white hover:bg-red-500 dark:text-white
                                     focus:ring-4 rounded-lg text-sm px-5 py-2.5 block">
-                                    <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                        viewBox="0 0 24 24">
-                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                            stroke-width="2"
-                                            d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                                    </svg>
-                                </button>
-                            </form>
+                                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                                    viewBox="0 0 24 24">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                                </svg>
+                            </button>
                         </td>
                     </tr>
                 @endforeach
@@ -82,6 +111,37 @@
                 const dataTable = new simpleDatatables.DataTable("#search-table", {
                     searchable: true,
                     sortable: false
+                });
+            }
+
+            function eliminarElemento(id) {
+                Swal.fire({
+                    title: "¿Estás seguro?",
+                    text: "No podrás revertir los cambios",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Si claro"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch('/admin/delete/output/' + id, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                        'content')
+                                }
+                            }).then(() => {
+                                Swal.fire({
+                                    title: "Eliminado",
+                                    text: "Tu registro ha sido eliminado",
+                                    icon: "success"
+                                })
+                            })
+                            .then(() => {
+                                window.location.reload();
+                            });
+                    }
                 });
             }
         </script>

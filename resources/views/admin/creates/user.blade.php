@@ -8,6 +8,15 @@
     <div class="justify-center">
         <form class="max-w-sm mx-auto" action="{{ route('admin.creates.users') }}" method="POST">
             @csrf
+            @if ($errors->any())
+                <div class="mb-4">
+                    <ul class="list-disc list-inside text-red-600">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
                 <input type="text" id="name" name="name"

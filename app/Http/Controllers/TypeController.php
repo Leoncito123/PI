@@ -70,7 +70,7 @@ class TypeController extends Controller
     return view('admin.edit.type', compact('type'));
   }
 
-  public function editType(Request $request, $id)
+  public function edit(Request $request, $id)
   {
     $type = Type::findOrFail($id);
 

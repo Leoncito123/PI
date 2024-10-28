@@ -9,6 +9,15 @@
         <form class="max-w-sm mx-auto" action="{{ route('admin.edits.output', $output->id) }}" method="POST">
             @csrf
             @method('POST')
+            @if ($errors->any())
+                <div class="mb-4">
+                    <ul class="list-disc list-inside text-red-600">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre de la
                     tarjeta</label>
@@ -23,8 +32,7 @@
                 <select id="ubications" name="dev_id"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     @foreach ($devices as $device)
-                        <option value="{{ $device->id }}"
-                            @if ($device->id == $output->dev_id) selected @endif>
+                        <option value="{{ $device->id }}" @if ($device->id == $output->dev_id) selected @endif>
                             {{ $device->name }}
                         </option>
                     @endforeach
@@ -36,8 +44,7 @@
                 <select id="ubications" name="type_id"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                     @foreach ($types as $type)
-                        <option value="{{ $type->id }}"
-                            @if ($type->id == $output->type_id) selected @endif>
+                        <option value="{{ $type->id }}" @if ($type->id == $output->type_id) selected @endif>
                             {{ $type->name }}
                         </option>
                     @endforeach

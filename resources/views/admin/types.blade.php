@@ -4,7 +4,37 @@
             {{ __('Administrador/Sensores') }}
         </h2>
     </x-slot>
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: "{{ session('success') }}",
+                confirmButtonText: 'Ok'
+            });
+        </script>
+    @endif
 
+    @if (session('edit'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: "{{ session('edit') }}",
+                confirmButtonText: 'Ok'
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "{{ session('error') }}",
+            });
+        </script>
+    @endif
     {{-- Formulario de búsqueda con JavaScript --}}
     <div class="mb-4">
         <input type="text" id="searchInput" placeholder="Buscar..." class="border rounded-lg p-2">
@@ -34,16 +64,20 @@
                                 class="w-full h-48 object-cover">
                         @endif
                         <div class="p-4">
-                            <h3 class="sensor-name text-lg font-semibold text-gray-900 dark:text-white"><strong>Nombre:
-                                </strong>{{ $type->name }}</h3>
+                            <h3 class="sensor-name text-lg font-semibold text-gray-900 dark:text-white">
+                                <strong>Nombre:
+                                </strong>{{ $type->name }}
+                            </h3>
                             <p class="sensor-variable text-gray-700 dark:text-gray-300"><strong>Identificador:
                                 </strong>{{ $type->variable }}</p>
-                            <p class="text-gray-700 dark:text-gray-300"><strong>Unidad: </strong>{{ $type->unit }}</p>
+                            <p class="text-gray-700 dark:text-gray-300"><strong>Unidad: </strong>{{ $type->unit }}
+                            </p>
                             <p class="text-gray-700 dark:text-gray-300"><strong>Valor Maximo:
                                 </strong>{{ $type->max_value }}</p>
                             <p class="text-gray-700 dark:text-gray-300"><strong>Valor Minimo:
                                 </strong>{{ $type->min_value }}</p>
-                            <p class="text-gray-700 dark:text-gray-300"><strong>Rangos: </strong>{{ $type->segment }}
+                            <p class="text-gray-700 dark:text-gray-300"><strong>Rangos:
+                                </strong>{{ $type->segment }}
                             </p>
                             <p class="text-gray-700 dark:text-gray-300"><strong>Intervalo de tiempo:
                                 </strong>{{ $type->interval }}</p>
@@ -53,15 +87,10 @@
                                     type="button">
                                     Editar
                                 </a>
-                                <form action="{{ route('admin.delete.type', ['id' => $type->id]) }}" method="POST"
-                                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar este tipo?');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="font-medium bg-red-500 text-white hover:bg-red-700 dark:text-white focus:ring-4 rounded-lg text-sm px-5 py-2.5 block">
-                                        Eliminar
-                                    </button>
-                                </form>
+                                <button type="submit" onclick="eliminarElemento({{ $type->id }})"
+                                    class="font-medium bg-red-500 text-white hover:bg-red-700 dark:text-white focus:ring-4 rounded-lg text-sm px-5 py-2.5 block">
+                                    Eliminar
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -87,5 +116,36 @@
                 }
             });
         });
+
+        function eliminarElemento(id) {
+            Swal.fire({
+                title: "¿Estás seguro?",
+                text: "No podrás revertir los cambios",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Si claro"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch('/admin/delete/type/' + id, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                    'content')
+                            }
+                        }).then(() => {
+                            Swal.fire({
+                                title: "Eliminado",
+                                text: "Tu registro ha sido eliminado",
+                                icon: "success"
+                            })
+                        })
+                        .then(() => {
+                            window.location.reload();
+                        });
+                }
+            });
+        }
     </script>
 </x-layout2>

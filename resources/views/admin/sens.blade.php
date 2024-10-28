@@ -9,6 +9,39 @@
         <a href="{{ route('admin.create.sens') }}"
             class="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-700">Crear Sensor</a>
     </div>
+
+    @if (session('success'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: "{{ session('success') }}",
+                confirmButtonText: 'Ok'
+            });
+        </script>
+    @endif
+
+    @if (session('edit'))
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '¡Éxito!',
+                text: "{{ session('edit') }}",
+                confirmButtonText: 'Ok'
+            });
+        </script>
+    @endif
+
+    @if (session('error'))
+        <script>
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "{{ session('error') }}",
+            });
+        </script>
+    @endif
+
     {{-- Tabla de sensores --}}
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -60,7 +93,6 @@
                     @else
                         @foreach ($groups as $mac => $sen)
                             @php
-                                // Obtén el primer sensor del grupo
                                 $firstSensor = $sen->first();
                             @endphp
                             <tr>
@@ -85,29 +117,26 @@
                                 <td>
                                     <a href="{{ route('admin.edit.sens', $firstSensor->id) }}">
                                         <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                            viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
                                                 d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z" />
                                         </svg>
                                     </a>
                                 </td>
                                 <td>
-                                    <form action="{{ route('admin.delete.sens', ['id' => $firstSensor->id]) }}" method="POST"
-                                        onsubmit="return confirm('¿Estás seguro de que deseas eliminar esta ubicación?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit"
-                                            class="font-medium bg-intenso text-white hover:bg-red-500 dark:text-white
+                                    <button onclick="eliminarElemento({{ $firstSensor->id }})"
+                                        class="font-medium bg-intenso text-white hover:bg-red-500 dark:text-white
                                             focus:ring-4 rounded-lg text-sm px-5 py-2.5 block">
-                                            <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
-                                                viewBox="0 0 24 24">
-                                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
-                                            </svg>
-                                        </button>
-                                    </form>
+                                        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            fill="none" viewBox="0 0 24 24">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+                                        </svg>
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
@@ -119,6 +148,37 @@
                     const dataTable = new simpleDatatables.DataTable("#search-table", {
                         searchable: true,
                         sortable: false
+                    });
+                }
+
+                function eliminarElemento(id) {
+                    Swal.fire({
+                        title: "¿Estás seguro?",
+                        text: "No podrás revertir los cambios",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#3085d6",
+                        cancelButtonColor: "#d33",
+                        confirmButtonText: "Si claro"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch('/admin/delete/sens/' + id, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                            'content')
+                                    }
+                                }).then(() => {
+                                    Swal.fire({
+                                        title: "Eliminado",
+                                        text: "Tu registro ha sido eliminado",
+                                        icon: "success"
+                                    })
+                                })
+                                .then(() => {
+                                    window.location.reload();
+                                });
+                        }
                     });
                 }
             </script>

@@ -42,19 +42,20 @@ class UbicationController extends Controller
       'latitude' => 'required',
     ]);
 
+
     $ubication = Ubication::create([
       'name' => $request->name,
       'sector' => $request->sector,
       'longitude' => $request->longitude,
       'latitude' => $request->latitude
     ]);
-    return redirect()->route('admin.ubications');
+    return redirect()->route('admin.ubications')->with('success', 'Ubicación creada correctamente');
   }
 
   public function editView($id)
   {
     $ubication = Ubication::find($id);
-    return view('admin.edit.ubication', compact('ubication', 'currentSupervisor'));
+    return view('admin.edit.ubication', compact('ubication'));
   }
 
   public function edit(Request $request, $id)
@@ -78,13 +79,13 @@ class UbicationController extends Controller
       'latitude' => $request->latitude
     ]);
 
-    return redirect()->route('admin.ubications');
+    return redirect()->route('admin.ubications')->with('edit', 'Ubicación actualizada correctamente');
   }
 
   public function destroy($id)
   {
     Ubication::destroy($id);
-    return redirect()->route('admin.ubications');
+    return redirect()->route('admin.ubications')->with('delete', 'Ubicación eliminada correctamente');
   }
 
   public function infoUbication()

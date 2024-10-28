@@ -9,6 +9,15 @@
         <form class="max-w-sm mx-auto" action="{{ route('admin.creates.outputs') }}" method="POST">
             @csrf
             @method('POST')
+            @if ($errors->any())
+                <div class="mb-4">
+                    <ul class="list-disc list-inside text-red-600">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre de la
                     tarjeta</label>

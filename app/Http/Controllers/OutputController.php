@@ -54,7 +54,7 @@ class OutputController extends Controller
       'type_id' => $request->type_id
     ]);
 
-    return redirect()->route('admin.outputs');
+    return redirect()->route('admin.outputs')->with('success', 'Su registro ha sido exitoso');
   }
 
   public function editView($id)
@@ -82,12 +82,12 @@ class OutputController extends Controller
       'status' => $request->status,
       'type_id' => $request->type_id
     ]);
-    return redirect()->route('admin.outputs');
+    return redirect()->route('admin.outputs')->with('success', 'Ha sido exitoso sus cambios');
   }
 
   function destroy($id)
   {
     Output::destroy($id);
-    return redirect()->route('admin.outputs');
+    return redirect()->route('admin.outputs')->with('succes', 'Se ha eliminado exitoso su registro');
   }
 }
