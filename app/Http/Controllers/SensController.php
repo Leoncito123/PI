@@ -53,16 +53,13 @@ class SensController extends Controller
       'ubication_id' => 'required'
     ]);
 
-    $macAddress = Macaddress::create(
-      [
-        'name' => $request->name,
-        'macaddress' => $request->macaddress,
-        'sector' => $request->sector,
-        'longitude' => $request->longitude,
-        'latitude' => $request->latitude
-      ]
-    );
-
+    $macAddress = Macaddress::create([
+      'name' => $request->name,
+      'macaddress' => $request->macaddress,
+      'sector' => $request->sector,
+      'longitude' => $request->longitude,
+      'latitude' => $request->latitude
+    ]);
     foreach ($request->types as $typeId) {
       Summaries::create(
         [
@@ -73,7 +70,7 @@ class SensController extends Controller
       );
     }
 
-    return redirect()->route('admin.sens')->with('success', 'Se ha creado exitosamente su registro');
+    return redirect()->route('admin.sens')->with('success', 'Sensor creado correctamente');
   }
 
   public function editView($id)
@@ -132,14 +129,14 @@ class SensController extends Controller
       );
     }
 
-    return redirect()->route('admin.sens')->with('success', 'Se ha editado exitosamente su registro');
+    return redirect()->route('admin.sens');
   }
 
   public function destroy($sens)
   {
     $sens = Macaddress::find($sens);
     $sens->delete();
-    return redirect()->route('admin.sens')->with('Se ha eliminado exitosamente su registro');
+    return redirect()->route('admin.sens');
   }
 
   public function destroySummary($id)

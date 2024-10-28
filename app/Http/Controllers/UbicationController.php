@@ -26,7 +26,9 @@ class UbicationController extends Controller
 
   public function createView()
   {
-    return view('admin.creates.ubication');
+    $supervisores = User::role('supervisor')->get();
+
+    return view('admin.creates.ubication', compact('supervisores'));
   }
 
   public function create(Request $request)
@@ -70,6 +72,7 @@ class UbicationController extends Controller
       'sector' => 'required',
       'longitude' => 'required',
       'latitude' => 'required',
+      'supervisor_id' => 'required|exists:users,id'
     ]);
 
     $ubication->update([
@@ -79,7 +82,12 @@ class UbicationController extends Controller
       'latitude' => $request->latitude
     ]);
 
-    return redirect()->route('admin.ubications')->with('edit', 'Ubicación actualizada correctamente');
+    // Actualizar el supervisor
+    $ubication->users()->detach(); // Elimina todas las asociaciones actuales
+    $supervisor = User::find($request->supervisor_id);
+    $supervisor->ubications()->attach($ubication->id);
+
+    return redirect()->route('admin.ubications');
   }
 
   public function destroy($id)
