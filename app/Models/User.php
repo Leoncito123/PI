@@ -11,39 +11,39 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable,HasRoles;
+  use HasFactory, Notifiable, HasRoles;
 
 
-    protected $fillable = [
-        'name',
-        'email',
-        'password'
+  protected $fillable = [
+    'name',
+    'email',
+    'password'
+  ];
+  protected $hidden = [
+    'password',
+    'remember_token',
+  ];
+
+  protected function casts(): array
+  {
+    return [
+      'email_verified_at' => 'datetime',
+      'password' => 'hashed',
     ];
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+  }
 
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+  public function ubications(): BelongsToMany
+  {
+    return $this->belongsToMany(Ubication::class, 'user_ubication');
+  }
 
-    public function ubications(): BelongsToMany
-    {
-        return $this->belongsToMany(Ubication::class, 'user_ubications');
-    }
+  public function types(): BelongsToMany
+  {
+    return $this->belongsToMany(Type::class, 'user_types');
+  }
 
-    public function types(): BelongsToMany
-    {
-        return $this->belongsToMany(Type::class, 'user_types');
-    }
-
-    public function getRoleAttribute()
-    {
-        return $this->roles->first()->name ?? 'guest';
-    }
+  public function getRoleAttribute()
+  {
+    return $this->roles->first()->name ?? 'guest';
+  }
 }
