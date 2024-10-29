@@ -34,7 +34,7 @@ class User extends Authenticatable
 
   public function ubications(): BelongsToMany
   {
-    return $this->belongsToMany(Ubication::class, 'user_ubication');
+    return $this->belongsToMany(Ubication::class, 'user_ubications');
   }
 
   public function types(): BelongsToMany
