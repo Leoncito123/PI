@@ -23,8 +23,6 @@ Route::get('/', function () {
 
 
 Route::group(['middleware' => ['role:admin|supervisor']], function () {
-  //Ruta de dashboard
-  Route::get('/dasboard', [DashboardController::class, 'index'])->name('dashboard');
 
   //Rutas para el apartado de administración de items
 
@@ -85,9 +83,11 @@ Route::group(['middleware' => ['role:admin|supervisor']], function () {
   //Fin de las rutas de administración
 });
 
-//Rutas para todos los roles 
+//Rutas para todos los roles
 Route::group(['middleware' => ['role:admin|supervisor|worker']], function () {
   Route::get('/map', [MapController::class, 'index'])->name('map');
+    //Ruta de dashboard
+    Route::get('/dasboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 require __DIR__ . '/auth.php';
