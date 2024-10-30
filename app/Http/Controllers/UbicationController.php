@@ -39,8 +39,8 @@ class UbicationController extends Controller
             'sector' => 'required',
             'longitude' => 'required',
             'latitude' => 'required',
+            'supervisor_id' => 'required|exists:users,id'
         ]);
-
 
         $ubication = Ubication::create([
             'name' => $request->name,
@@ -48,13 +48,19 @@ class UbicationController extends Controller
             'longitude' => $request->longitude,
             'latitude' => $request->latitude
         ]);
-        return redirect()->route('admin.ubications')->with('success', 'Ubicación creada correctamente');
+
+        $supervisor = User::find($request->supervisor_id);
+        $supervisor->ubications()->attach($ubication->id);
+
+        return redirect()->route('admin.ubications');
     }
 
     public function editView($id)
     {
         $ubication = Ubication::find($id);
-        return view('admin.edit.ubication', compact('ubication'));
+        $supervisores = User::role('supervisor')->get();
+        $currentSupervisor = $ubication->users()->role('supervisor')->first();
+        return view('admin.edit.ubication', compact('ubication', 'supervisores', 'currentSupervisor'));
     }
 
     public function edit(Request $request, $id)
@@ -90,7 +96,7 @@ class UbicationController extends Controller
     public function destroy($id)
     {
         Ubication::destroy($id);
-        return redirect()->route('admin.ubications')->with('delete', 'Ubicación eliminada correctamente');
+        return redirect()->route('admin.ubications');
     }
 
     public function infoUbication()
@@ -98,28 +104,37 @@ class UbicationController extends Controller
         $user = auth()->user();
         $isAdmin = !$user->hasRole('supervisor');
 
-        if ($isAdmin) {
-            $ubications = Ubication::all();
-        } else {
-            $ubications = $user->ubications;
-        }
+        // Obtener las ubicaciones según el rol del usuario
+        $ubications = $isAdmin ? Ubication::all() : $user->ubications;
 
         $chartData = [];
         $allSensorTypes = collect();
 
         foreach ($ubications as $ubication) {
-            $sensors = Summaries::where('ubication_id', $ubication->id)
+            // Agrupar y contar los sensores por tipo directamente en la consulta
+            $sensorCounts = Summaries::where('ubication_id', $ubication->id)
+                ->selectRaw('type_id, COUNT(*) as count')
+                ->groupBy('type_id')
                 ->with('type')
-                ->get();
+                ->get()
+                ->pluck('count', 'type.name');
 
-            $sensorCounts = $sensors->groupBy('type.name')->map->count();
+            // Agregar los tipos de sensores a la colección de todos los tipos de sensores
+            $allSensorTypes = $allSensorTypes->merge($sensorCounts->keys());
 
+            // Crear un array con todos los tipos de sensores y valores iniciales de 0
+            $data = array_fill_keys($allSensorTypes->toArray(), 0);
+
+            // Rellenar el array con los datos existentes
+            foreach ($sensorCounts as $type => $count) {
+                $data[$type] = $count;
+            }
+
+            // Agregar los datos de la ubicación al array de chartData
             $chartData[] = [
-                'name' => $ubication->name,
-                'data' => $sensorCounts->values()->toArray(),
+                'name' => $ubication->name . ' - ' . $ubication->sector,
+                'data' => array_values($data),
             ];
-
-            $allSensorTypes = $allSensorTypes->merge($sensors->pluck('type.name')->unique());
         }
 
         $sensorTypes = $allSensorTypes->unique()->values()->toArray();

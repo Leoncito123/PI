@@ -44,7 +44,7 @@
                 },
                 tooltip: {
                     y: {
-                        formatter: function (val) {
+                        formatter: function(val) {
                             return val + " sensores"
                         }
                     }
