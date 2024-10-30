@@ -66,5 +66,8 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
 # PI
-
+php artisan migrate:fresh
 php artisan db:seed --class=AdminSeeder
+php artisan db:seed --class=Ubications_users
+php artisan db:seed --class=Contendio_Seeder
+php artisan db:seed --class=Llenado_datos

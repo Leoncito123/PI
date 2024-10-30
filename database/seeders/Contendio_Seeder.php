@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Data;
 use App\Models\Device;
 use App\Models\Macaddress;
 use App\Models\Output;
@@ -10,6 +11,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Type;
 use App\Models\Ubication;
+use Carbon\Carbon;
 
 class Contendio_Seeder extends Seeder
 {

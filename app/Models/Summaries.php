@@ -17,7 +17,7 @@ class Summaries extends Model
   //Funcion para la relacion del modelo de Summaries con el modelo de Datas
   public function data()
   {
-    return $this->belongsTo(Data::class, 'summary_id');
+    return $this->hasMany(Data::class, 'summary_id');
   }
 
   //Funcion para la relacion del modelo de Summaries con el modelo de Ubications

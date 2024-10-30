@@ -27,17 +27,17 @@ class MapController extends Controller
 
   public function getUbications()
   {
-    return Ubication::select('id', 'name', 'latitude', 'longitude')->get();
+    return Ubication::select('id', 'name', 'sector', 'latitude', 'longitude')->get();
   }
 
   public function getSensors(Request $request)
   {
-    $query = Summaries::with(['ubication', 'type', 'data' => function ($q) {
+    $query = Summaries::with(['ubications', 'type', 'data' => function ($q) {
       $q->latest('date')->latest('time')->take(1);
     }]);
 
     if ($request->has('sector') && $request->sector !== '') {
-      $query->whereHas('ubication', function ($q) use ($request) {
+      $query->whereHas('ubications', function ($q) use ($request) {
         $q->where('sector', $request->sector);
       });
     }
@@ -49,9 +49,9 @@ class MapController extends Controller
     $sensors = $query->get()->map(function ($summary) {
       $lastData = $summary->data->first();
       return [
-        'name' => $summary->ubication->name,
-        'latitude' => $summary->ubication->latitude,
-        'longitude' => $summary->ubication->longitude,
+        'name' => $summary->ubications->name,
+        'latitude' => $summary->ubications->latitude,
+        'longitude' => $summary->ubications->longitude,
         'last_value' => $lastData ? $lastData->value : null,
         'unit' => $summary->type->unit,
         'battery' => $lastData ? $lastData->battery : null,

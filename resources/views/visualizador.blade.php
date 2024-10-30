@@ -95,7 +95,7 @@
                     const locationButtons = document.getElementById('locationButtons');
                     data.forEach(location => {
                         const button = document.createElement('button');
-                        button.textContent = location.name;
+                        button.textContent = location.name + ' / ' + location.sector;
                         button.className = 'px-3 py-1 bg-gray-200 rounded-md hover:bg-gray-300';
                         button.onclick = () => focusLocation(location.latitude, location.longitude);
                         locationButtons.appendChild(button);
@@ -121,7 +121,7 @@
                     data.forEach(sensor => {
                         const marker = L.marker([sensor.latitude, sensor.longitude]).addTo(map);
                         marker.bindPopup(`
-                            <b>${sensor.name}</b><br>
+                            <p>${sensor.name}</p><br>
                             Último valor: ${sensor.last_value} ${sensor.unit}<br>
                             Batería: ${sensor.battery}%<br>
                             Fecha: ${sensor.last_update}
