@@ -12,3 +12,4 @@ Route::get('/sectors', [MapController::class, 'getSectors']);
 Route::get('/types', [MapController::class, 'getTypes']);
 Route::get('/ubications', [MapController::class, 'getUbications']);
 Route::get('/sensors', [MapController::class, 'getSensors']);
+

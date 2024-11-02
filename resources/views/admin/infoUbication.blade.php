@@ -49,6 +49,15 @@
                             return val + " sensores"
                         }
                     }
+                },
+                legend: {
+                    show: true,
+                    onItemClick: {
+                        toggleDataSeries: true // Permite ocultar/mostrar series al hacer clic en la leyenda
+                    },
+                    onItemHover: {
+                        highlightDataSeries: true // Resalta la serie al pasar el cursor sobre la leyenda
+                    }
                 }
             };
 
