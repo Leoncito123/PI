@@ -1,4 +1,5 @@
 <x-layout2>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <div id="chart"></div>
 
     <script>
@@ -44,7 +45,7 @@
                 },
                 tooltip: {
                     y: {
-                        formatter: function (val) {
+                        formatter: function(val) {
                             return val + " sensores"
                         }
                     }

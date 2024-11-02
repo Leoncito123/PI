@@ -88,7 +88,13 @@
                 <tbody>
                     @if (empty($groups) || $groups->isEmpty())
                         <tr>
-                            <td colspan="7" class="text-center">No hay sensores registrados</td>
+                            <td aria-colspan="7" class="text-center">No hay sensores registrados</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
                         </tr>
                     @else
                         @foreach ($groups as $mac => $sen)

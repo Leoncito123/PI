@@ -53,7 +53,11 @@
             <tbody>
                 @if ($devices->isEmpty())
                     <tr>
-                        <td colspan="5" class="text-center">No hay Tarjetas registradas</td>
+                        <td class="text-center">No hay Tarjetas registradas</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 @endif
                 @foreach ($devices as $device)

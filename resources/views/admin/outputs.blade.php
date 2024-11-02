@@ -54,7 +54,13 @@
             <tbody>
                 @if ($outputs->count() == 0)
                     <tr>
-                        <td colspan="7" class="text-center">No hay Tarjetas registradas</td>
+                        <td class="text-center">No hay Tarjetas registradas</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 @endif
                 @foreach ($outputs as $output)

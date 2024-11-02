@@ -47,7 +47,13 @@
             <tbody>
                 @if ($ubications->isEmpty())
                     <tr>
-                        <td colspan="7" class="text-center">No hay ubicaciones registradas</td>
+                        <td class="text-center">No hay ubicaciones registradas</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 @endif
                 @foreach ($ubications as $ubication)
