@@ -37,7 +37,7 @@
     @endif
     <div class="flex items-center justify-end mb-4">
         <a href="{{ route('admin.create.output') }}"
-            class="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-700">Crear Tarjetas</a>
+            class="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-700">Crear Motores</a>
     </div>
     <div class="py-12">
         <table id="search-table">

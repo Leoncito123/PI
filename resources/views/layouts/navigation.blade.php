@@ -5,7 +5,8 @@
             <div class="flex items-center">
                 <!-- Logo -->
                 <a href="{{ route('dashboard') }}" class="flex items-center space-x-2">
-                    <x-application-logo class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                    <img src="{{ asset('images/logo.jpg') }}" alt="AquaLogic Logo" class="w-8 h-8 rounded-full">
+                    <span class="text-xl font-bold text-gray-800 dark:text-white">AquaLogic</span>
                 </a>
 
                 <!-- Navigation Links -->

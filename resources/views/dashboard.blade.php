@@ -42,7 +42,8 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <button onclick="removeAlert('alert-{{ $loop->index }}')"
+                                    <button
+                                        onclick="dismissAlert('{{ $alert['alert_key'] }}', 'alert-{{ $loop->index }}')"
                                         class="text-gray-400 hover:text-gray-500 focus:outline-none focus:text-gray-500 transition ease-in-out duration-150">
                                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd"
@@ -169,6 +170,37 @@
                 }]
             }
         });
+
+        async function dismissAlert(alertKey, elementId) {
+            try {
+                const response = await fetch('/dismiss-alert', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({
+                        alert_key: alertKey
+                    })
+                });
+
+                if (response.ok) {
+                    const alert = document.getElementById(elementId);
+                    alert.classList.add('removing');
+
+                    setTimeout(() => {
+                        alert.remove();
+                        // Verificar si no quedan más alertas
+                        const alertsContainer = document.getElementById('alertsContainer');
+                        if (alertsContainer && alertsContainer.children.length === 0) {
+                            alertsContainer.remove();
+                        }
+                    }, 500);
+                }
+            } catch (error) {
+                console.error('Error al descartar la alerta:', error);
+            }
+        }
     </script>
     <style>
         .alert-item {
@@ -188,30 +220,4 @@
             border-width: 0;
         }
     </style>
-
-    <script>
-        function removeAlert(alertId) {
-            const alert = document.getElementById(alertId);
-            alert.classList.add('removing');
-
-            setTimeout(() => {
-                alert.remove();
-                adjustSpacing();
-                if (document.getElementById('alertsContainer').children.length === 0) {
-                    document.getElementById('alertsContainer').remove();
-                }
-            }, 500); // Este tiempo debe coincidir con la duración de la transición en CSS
-        }
-
-        function adjustSpacing() {
-            const alerts = document.querySelectorAll('.alert-item:not(.removing)');
-            alerts.forEach((alert, index) => {
-                if (index === 0) {
-                    alert.style.marginTop = '0';
-                } else {
-                    alert.style.marginTop = '1rem'; // O el espacio que prefieras entre alertas
-                }
-            });
-        }
-    </script>
 </x-app-layout>

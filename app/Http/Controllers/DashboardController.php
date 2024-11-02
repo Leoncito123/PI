@@ -6,6 +6,7 @@ use App\Models\Data;
 use App\Models\Summaries;
 use App\Models\Type;
 use Illuminate\Http\Request;
+use App\Models\DismissedAlert;
 
 class DashboardController extends Controller
 {
@@ -65,25 +66,41 @@ class DashboardController extends Controller
     $types = Type::pluck('name', 'id');
 
     // **Alertas**
+    $dismissedAlerts = DismissedAlert::where('user_id', auth()->id())
+      ->get()
+      ->map(function ($dismissal) {
+        return $dismissal->type . '_' . $dismissal->sector . '_' . $dismissal->alert_date;
+      })
+      ->toArray();
+
+    // Alertas
     $alerts = [];
     foreach ($data as $entry) {
+      // Crear identificador único para cada alerta
+      $valueAlertKey = 'value_' . $entry->sector . '_' . $entry->date;
+      $batteryAlertKey = 'battery_' . $entry->sector . '_' . $entry->date;
+
       // Comprobar si el valor está fuera del rango permitido
-      if ($entry->value < $entry->min_value || $entry->value > $entry->max_value) {
+      if (($entry->value < $entry->min_value || $entry->value > $entry->max_value)
+        && !in_array($valueAlertKey, $dismissedAlerts)
+      ) {
         $alerts[] = [
           'type' => 'value',
           'message' => "El valor {$entry->value} {$entry->unit} en el sector {$entry->sector} está fuera del rango permitido ({$entry->min_value}-{$entry->max_value} {$entry->unit}).",
           'date' => $entry->date,
-          'sector' => $entry->sector
+          'sector' => $entry->sector,
+          'alert_key' => $valueAlertKey
         ];
       }
 
       // Comprobar si la batería está baja
-      if ($entry->battery < 20) { // Definir umbral de batería baja
+      if ($entry->battery < 20 && !in_array($batteryAlertKey, $dismissedAlerts)) {
         $alerts[] = [
           'type' => 'battery',
           'message' => "La batería del sensor en el sector {$entry->sector} está baja ({$entry->battery}%).",
           'date' => $entry->date,
-          'sector' => $entry->sector
+          'sector' => $entry->sector,
+          'alert_key' => $batteryAlertKey
         ];
       }
     }
@@ -105,5 +122,19 @@ class DashboardController extends Controller
       'dateRange',
       'alerts'
     ));
+  }
+
+  public function dismissAlert(Request $request)
+  {
+    $parts = explode('_', $request->alert_key);
+
+    DismissedAlert::create([
+      'type' => $parts[0],
+      'sector' => $parts[1],
+      'alert_date' => $parts[2],
+      'user_id' => auth()->id()
+    ]);
+
+    return response()->json(['success' => true]);
   }
 }

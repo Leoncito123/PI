@@ -80,14 +80,15 @@ Route::group(['middleware' => ['role:admin|supervisor']], function () {
   Route::delete('/admin/delete/output/{id}', [OutputController::class, 'destroy'])->name('admin.delete.output');
   Route::delete('/admin/delete/device/{id}', [DeviceController::class, 'destroy'])->name('admin.delete.device');
   Route::delete('/admin/delete/ubication/{id}', [UbicationController::class, 'destroy'])->name('admin.delete.ubication');
+  Route::post('/dismiss-alert', [DashboardController::class, 'dismissAlert'])->name('dismiss-alert');
   //Fin de las rutas de administración
 });
 
 //Rutas para todos los roles
 Route::group(['middleware' => ['role:admin|supervisor|worker']], function () {
   Route::get('/map', [MapController::class, 'index'])->name('map');
-    //Ruta de dashboard
-    Route::get('/dasboard', [DashboardController::class, 'index'])->name('dashboard');
+  //Ruta de dashboard
+  Route::get('/dasboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 require __DIR__ . '/auth.php';

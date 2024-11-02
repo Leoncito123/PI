@@ -22,7 +22,7 @@
     <nav class="bg-white border-gray-200 dark:bg-gray-900 shadow-md">
         <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
             <a href="{{ route('welcome') }}" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="https://flowbite.com/docs/images/logo.svg" class="h-8" alt="Flowbite Logo" />
+                <img src="{{ asset('images/logo.jpg') }}" class="h-10 rounded-full" alt="Flowbite Logo" />
                 <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">AquaLogic</span>
             </a>
             <button data-collapse-toggle="navbar-default" type="button"
@@ -48,15 +48,9 @@
                         @else
                             <li>
                                 <a href="{{ route('login') }}"
-                                class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-blue-700  md:border-0 md:hover:text-white p-5   dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Iniciar
+                                    class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-blue-700  md:border-0 md:hover:text-white p-5   dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Iniciar
                                     Sesión</a>
                             </li>
-                            @if (Route::has('register'))
-                                <li>
-                                    <a href="{{ route('register') }}"
-                                        class="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-blue-700  md:border-0 md:hover:text-white p-5   dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">Registrarse</a>
-                                </li>
-                            @endif
                         @endauth
                     @endif
                 </ul>
@@ -64,27 +58,163 @@
         </div>
     </nav>
 
-    <div class="container mx-auto my-8">
-        <div class="relative w-full h-96 bg-cover bg-center" style="background-image: url('{{ asset('images/agua.jpg') }}')">
-            <div class="flex flex-col items-center justify-center w-full h-full bg-gray-900 bg-opacity-50">
-                <h1 class="text-4xl font-bold text-white">AquaLogic</h1>
-                <p class="text-lg text-white">Tu mejor opción para el control de calidad del agua</p>
+    <div class="relative bg-gradient-to-r from-blue-600 to-blue-800 h-screen">
+        <div class="absolute inset-0">
+            <img src="{{ asset('images/agua.gif') }}" class="w-full h-full object-cover mix-blend-overlay"
+                alt="Water background">
+        </div>
+        <div class="animation relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+            <h1 class="text-6xl font-bold tracking-tight text-white sm:text-7xl lg:text-8xl">AquaLogic</h1>
+            <p class="mt-6 text-xl text-gray-100 max-w-3xl">Monitoreo inteligente y control de calidad del agua para tu
+                tranquilidad</p>
+            <div class="mt-10 flex gap-x-6">
                 <a href="{{ route('login') }}"
-                class="btn inline-block rounded border-2 hover:bg-white hover:text-black border-neutral-50 px-6 pb-[6px] pt-2 text-xs font-medium uppercase leading-normal text-neutral-50 transition duration-150 ease-in-out hover:border-neutral-300 focus:border-neutral-300 focus:text-neutral-200 focus:outline-none focus:ring-0 active:border-neutral-300 active:text-neutral-200 dark:hover:bg-neutral-600 dark:focus:bg-neutral-600">
-                EMPEZAR ->
-            </a>
+                    class="rounded-md bg-white px-8 py-3 text-base font-semibold text-blue-600 shadow-sm hover:bg-gray-100">
+                    Comenzar ahora
+                </a>
+                <a href="#features" class="text-base font-semibold leading-7 text-white hover:text-gray-100">
+                    Conoce más <span aria-hidden="true">→</span>
+                </a>
             </div>
         </div>
     </div>
-    
+    <div id="features" class="py-24 bg-white sm:py-32">
+        <div class="mx-auto max-w-7xl px-6 lg:px-8">
+            <div class="primero mx-auto max-w-2xl lg:text-center">
+                <h2 class="text-base font-semibold leading-7 text-blue-600">Monitoreo Avanzado</h2>
+                <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Todo lo que necesitas para
+                    el control del agua</p>
+            </div>
+            <div class="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
+                <dl class="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
 
-    <footer class="bg-white dark:bg-gray-900 py-4 shadow-md">
-        <div class="max-w-screen-xl mx-auto text-center">
-            <p class="text-gray-500 dark:text-gray-400">© 2023 AquaLogic. Todos los derechos reservados.</p>
+                    <div class="fade-in flex flex-col">
+                        <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
+                            <svg class="h-5 w-5 flex-none text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                            </svg>
+                            Monitoreo en tiempo real
+                        </dt>
+                        <dd class="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
+                            <p class="flex-auto">Seguimiento continuo de parámetros críticos del agua las 24 horas del
+                                día.</p>
+                        </dd>
+                    </div>
+
+                    <div class="fade-in flex flex-col">
+                        <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
+                            <svg class="h-5 w-5 flex-none text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                            </svg>
+                            Reportes personalizados
+                        </dt>
+                        <dd class="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
+                            <p class="flex-auto">Consultas personalizadas para un buen análisis.</p>
+                        </dd>
+                    </div>
+
+                    <div class="fade-in flex flex-col">
+                        <dt class="flex items-center gap-x-3 text-base font-semibold leading-7 text-gray-900">
+                            <svg class="h-5 w-5 flex-none text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                            </svg>
+                            Gestionador de dispositivos
+                        </dt>
+                        <dd class="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-600">
+                            <p class="flex-auto">Gestiona facilmente todos tus dispositivos.</p>
+                        </dd>
+                    </div>
+                </dl>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white rounded-lg shadow dark:bg-gray-900 m-4">
+        <div class="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+            <div class="sm:flex sm:items-center sm:justify-between">
+                <a href="{{ route('welcome') }}" class="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse">
+                    <img src="{{ asset('images/logo.jpg') }}" class="h-10 rounded-full " alt="Flowbite Logo" />
+                    <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">AquaLogic</span>
+                </a>
+                <ul
+                    class="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-500 sm:mb-0 dark:text-gray-400">
+                    <li>
+                        <a href="#" class="hover:underline me-4 md:me-6">About</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:underline me-4 md:me-6">Privacy Policy</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:underline me-4 md:me-6">Licensing</a>
+                    </li>
+                    <li>
+                        <a href="#" class="hover:underline">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+            <span class="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a
+                    href="https://flowbite.com/" class="hover:underline">AquaLogic™</a>. All Rights Reserved.</span>
         </div>
     </footer>
 
+
+
     <script src="{{ asset('path/to/flowbite/dist/flowbite.min.js') }}"></script>
 </body>
+<style>
+    .animation {
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+
+        }
+
+        100% {
+            opacity: 1;
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+    }
+
+    .fade-in.animate {
+        opacity: 1;
+        transform: translateY(0);
+
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const elements = document.querySelectorAll(
+            '.fade-in');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add(
+                        'animate');
+                    observer.unobserve(entry
+                        .target
+                    );
+                }
+            });
+        });
+
+        elements.forEach((el) => observer.observe(el));
+    });
+</script>
+
+
 
 </html>
