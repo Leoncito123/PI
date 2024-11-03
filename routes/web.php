@@ -3,6 +3,8 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DeviceController;
+use App\Http\Controllers\GeminiController;
+use App\Http\Controllers\GeminiDashboardController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\OutputController;
 use App\Http\Controllers\ProfileController;
@@ -11,6 +13,8 @@ use App\Http\Controllers\TypeController;
 use App\Http\Controllers\UbicationController;
 use App\Http\Controllers\UserController;
 use App\Models\Device;
+
+
 use App\Models\Type;
 use Illuminate\Support\Facades\Route;
 
@@ -89,6 +93,7 @@ Route::group(['middleware' => ['role:admin|supervisor|worker']], function () {
   Route::get('/map', [MapController::class, 'index'])->name('map');
   //Ruta de dashboard
   Route::get('/dasboard', [DashboardController::class, 'index'])->name('dashboard');
-});
 
+  Route::post('/gemini/ask', [GeminiDashboardController::class, 'ask'])->name('gemini.ask');
+});
 require __DIR__ . '/auth.php';
