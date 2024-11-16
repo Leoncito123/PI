@@ -19,6 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('data_id'); // Agregar este campo
             $table->string('name'); // Agregar este campo
+            $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('data_id')->references('id')->on('data'); // Asegúrate de que la tabla 'data' exista
