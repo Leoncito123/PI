@@ -17,11 +17,11 @@ return new class extends Migration
             $table->string('sector');
             $table->date('alert_date');
             $table->unsignedBigInteger('user_id');
-            $table->timestamps();
-            
+            $table->unsignedBigInteger('data_id'); // Agregar este campo
+            $table->string('name'); // Agregar este campo
+
             $table->foreign('user_id')->references('id')->on('users');
-            // Índice único para evitar duplicados
-            $table->unique(['type', 'sector', 'alert_date', 'user_id'], 'unique_alert_dismissal');
+            $table->foreign('data_id')->references('id')->on('data'); // Asegúrate de que la tabla 'data' exista
         });
     }
 

@@ -7,11 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class DismissedAlert extends Model
 {
-  use HasFactory;
-  protected $fillable = ['type', 'sector', 'alert_date', 'user_id'];
+    use HasFactory;
+    protected $fillable = ['type', 'sector', 'alert_date', 'user_id', 'data_id', 'name'];
 
-  public function user()
-  {
-    return $this->belongsTo(User::class);
-  }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

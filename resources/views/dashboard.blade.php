@@ -123,255 +123,6 @@
                 <canvas id="sectorChart"></canvas>
             </div>
         </div>
-
-        <button onclick="openChatModal()"
-            class="fixed bottom-4 right-4 bg-indigo-600 text-white rounded-full p-4 shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4z" />
-            </svg>
-        </button>
-
-        <!-- Modal del chat -->
-        <div id="chatModal"
-            class="hidden fixed inset-0 bg-black/25 backdrop-blur-sm overflow-y-auto h-full w-full z-50">
-            <div class="relative top-10 mx-auto p-6 w-full max-w-2xl">
-                <!-- Card Principal -->
-                <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
-                    <div class="flex flex-col h-[700px]">
-                        <!-- Header del modal con diseño mejorado -->
-                        <div class="flex justify-between items-center px-6 py-4 bg-white border-b">
-                            <div class="flex items-center space-x-3">
-                                <div class="h-10 w-10 bg-indigo-100 rounded-full flex items-center justify-center">
-                                    <svg class="h-6 w-6 text-indigo-600" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4z" />
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 class="text-lg font-semibold text-gray-900">Chat con Gemini AI</h3>
-                                    <p class="text-sm text-gray-500">Asistente Virtual</p>
-                                </div>
-                            </div>
-                            <button onclick="closeChatModal()"
-                                class="rounded-full p-2 hover:bg-gray-100 transition-colors">
-                                <svg class="h-6 w-6 text-gray-500" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        </div>
-
-                        <!-- Filtros con diseño mejorado -->
-                        <div class="px-6 py-3 bg-gray-50">
-                            <div class="relative">
-                                <select id="chatSector"
-                                    class="w-full appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-8 
-                                         focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors">
-                                    <option value="all">Todos los sectores</option>
-                                    @foreach ($sectors as $sector)
-                                        <option value="{{ $sector }}">{{ $sector }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 9l-7 7-7-7" />
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Área de mensajes con diseño mejorado -->
-                        <div id="chat-messages" class="flex-1 overflow-y-auto px-6 py-4 space-y-4 bg-gray-50">
-                            <!-- Los mensajes se insertarán aquí dinámicamente -->
-                            <div class="message bot">
-                                <div class="flex items-start space-x-3">
-                                    <div
-                                        class="h-8 w-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                        <svg class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4z" />
-                                        </svg>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm font-medium text-gray-900">Gemini AI</p>
-                                        <p class="text-gray-700">¡Hola! ¿En qué puedo ayudarte hoy?</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- Formulario de entrada con diseño mejorado -->
-                    <div class="p-6 bg-white border-t">
-                        <form id="chat-form" class="flex space-x-3">
-                            <div class="relative flex-1">
-                                <input type="text" id="question"
-                                    class="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg 
-                                             focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors"
-                                    placeholder="Escribe tu pregunta aquí...">
-                                <button type="submit"
-                                    class="absolute right-2 top-1/2 transform -translate-y-1/2 
-                                             bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 
-                                             focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
-                                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 12h14M12 5l7 7-7 7" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <style>
-        .message {
-            @apply p-4 rounded-lg my-2 max-w-[85%] shadow-sm;
-        }
-
-        .message.user {
-            @apply bg-white text-gray-800 ml-auto;
-        }
-
-        .message.bot {
-            @apply bg-indigo-50 text-gray-800 mr-auto;
-        }
-
-        .message.error {
-            @apply bg-red-50 text-red-800 mx-auto;
-        }
-
-        /* Estilizar la barra de desplazamiento */
-        #chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        #chat-messages::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        #chat-messages::-webkit-scrollbar-thumb {
-            background-color: rgba(156, 163, 175, 0.5);
-            border-radius: 3px;
-        }
-
-        #chat-messages::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(156, 163, 175, 0.7);
-        }
-    </style>
-    <script>
-        function openChatModal() {
-            document.getElementById('chatModal').classList.remove('hidden');
-        }
-
-        function closeChatModal() {
-            document.getElementById('chatModal').classList.add('hidden');
-        }
-
-        // Cerrar modal al hacer clic fuera
-        document.getElementById('chatModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeChatModal();
-            }
-        });
-
-        document.getElementById('chat-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const question = document.getElementById('question').value;
-            const sector = document.getElementById('chatSector').value;
-
-            if (!question.trim()) return;
-
-            // Agregar pregunta al chat
-            appendMessage('Tú: ' + question, 'user');
-
-            try {
-                const response = await fetch('/gemini/ask', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({
-                        question: question,
-                        sector: sector
-                    })
-                });
-
-                const data = await response.json();
-                appendMessage('Gemini: ' + data.answer, 'bot');
-            } catch (error) {
-                appendMessage('Error: No se pudo obtener la respuesta', 'error');
-            }
-
-            document.getElementById('question').value = '';
-        });
-
-        function appendMessage(message, type) {
-            const chatMessages = document.getElementById('chat-messages');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${type}`;
-
-            // Separar el prefijo (Tú: o Gemini:) del mensaje
-            const [prefix, ...messageParts] = message.split(':');
-            const messageContent = messageParts.join(':').trim();
-
-            // Crear el contenido HTML según el tipo de mensaje
-            if (type === 'user') {
-                messageDiv.innerHTML = `
-            <div class="flex flex-col">
-                <span class="text-sm font-medium text-gray-900 mb-1">${prefix}</span>
-                <span class="text-gray-700">${messageContent}</span>
-            </div>
-        `;
-            } else if (type === 'bot') {
-                messageDiv.innerHTML = `
-            <div class="flex items-start space-x-3">
-                <div class="h-8 w-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <svg class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4z"/>
-                    </svg>
-                </div>
-                <div class="flex-1">
-                    <p class="text-sm font-medium text-gray-900">${prefix}</p>
-                    <p class="text-gray-700">${messageContent}</p>
-                </div>
-            </div>
-        `;
-            } else {
-                // Mensaje de error
-                messageDiv.innerHTML = `
-            <div class="flex items-center justify-center">
-                <svg class="h-5 w-5 text-red-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span>${message}</span>
-            </div>
-        `;
-            }
-
-            chatMessages.appendChild(messageDiv);
-
-            // Scroll suave hasta el último mensaje
-            messageDiv.scrollIntoView({
-                behavior: 'smooth',
-                block: 'end'
-            });
-        }
-    </script>
     </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -426,7 +177,9 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        'Accept': 'application/json', // Asegura la aceptación de JSON
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
                     },
                     body: JSON.stringify({
                         alert_key: alertKey
@@ -434,20 +187,27 @@
                 });
 
                 if (response.ok) {
+                    // Procesar la alerta eliminada
                     const alert = document.getElementById(elementId);
-                    alert.classList.add('removing');
+                    if (alert) {
+                        alert.classList.add('removing');
 
-                    setTimeout(() => {
-                        alert.remove();
-                        // Verificar si no quedan más alertas
-                        const alertsContainer = document.getElementById('alertsContainer');
-                        if (alertsContainer && alertsContainer.children.length === 0) {
-                            alertsContainer.remove();
-                        }
-                    }, 500);
+                        setTimeout(() => {
+                            alert.remove();
+                            // Verificar si no quedan más alertas
+                            const alertsContainer = document.getElementById('alertsContainer');
+                            if (alertsContainer && alertsContainer.children.length === 0) {
+                                alertsContainer.remove();
+                            }
+                        }, 500);
+                    }
+                } else {
+                    // Muestra un mensaje de error si la respuesta no es exitosa
+                    const errorData = await response.json();
+                    console.error('Error al descartar la alerta:', errorData.message || 'Error desconocido.');
                 }
             } catch (error) {
-                console.error('Error al descartar la alerta:', error);
+                console.error('Error al realizar la solicitud de descarte:', error);
             }
         }
     </script>
