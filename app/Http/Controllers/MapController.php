@@ -36,26 +36,30 @@ class MapController extends Controller
       $q->latest('date')->latest('time')->take(1);
     }]);
 
-    if ($request->has('sector') && $request->sector !== '') {
+    // Filtrar por sector si está presente
+    if ($request->filled('sector')) {
       $query->whereHas('ubications', function ($q) use ($request) {
         $q->where('sector', $request->sector);
       });
     }
 
-    if ($request->has('type') && $request->type !== '') {
+    // Filtrar por tipo si está presente
+    if ($request->filled('type')) {
       $query->where('type_id', $request->type);
     }
 
     $sensors = $query->get()->map(function ($summary) {
+      $ubication = $summary->ubications;
       $lastData = $summary->data->first();
+
       return [
-        'name' => $summary->ubications->name,
-        'latitude' => $summary->ubications->latitude,
-        'longitude' => $summary->ubications->longitude,
-        'last_value' => $lastData ? $lastData->value : null,
-        'unit' => $summary->type->unit,
-        'battery' => $lastData ? $lastData->battery : null,
-        'last_update' => $lastData ? $lastData->date . ' ' . $lastData->time : null,
+        'name' => $ubication ? $ubication->name : 'Desconocido',
+        'latitude' => $ubication ? $ubication->latitude : null,
+        'longitude' => $ubication ? $ubication->longitude : null,
+        'last_value' => $lastData ? $lastData->value : 'Sin datos',
+        'unit' => $summary->type ? $summary->type->unit : 'N/A',
+        'battery' => $lastData ? $lastData->battery : 'N/A',
+        'last_update' => $lastData ? $lastData->date . ' ' . $lastData->time : 'No actualizado',
       ];
     });
 

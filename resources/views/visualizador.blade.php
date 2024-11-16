@@ -15,12 +15,11 @@
                             <select id="sectorFilter"
                                 class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 <option value="">Todos los sectores</option>
-                                <!-- Opciones de sectores se cargarán dinámicamente -->
                             </select>
                             <select id="typeFilter"
                                 class="rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                                 <option value="">Todos los tipos</option>
-                                <!-- Opciones de tipos se cargarán dinámicamente -->
+
                             </select>
                             <button id="applyFilters"
                                 class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">Aplicar
@@ -118,21 +117,30 @@
             fetch(`/api/sensors?sector=${sector}&type=${type}`)
                 .then(response => response.json())
                 .then(data => {
+                    if (data.length === 0) {
+                        alert('No se encontraron sensores para los filtros aplicados.');
+                        return;
+                    }
+
                     data.forEach(sensor => {
-                        const marker = L.marker([sensor.latitude, sensor.longitude]).addTo(map);
-                        marker.bindPopup(`
-                            <p>${sensor.name}</p><br>
-                            Último valor: ${sensor.last_value} ${sensor.unit}<br>
-                            Batería: ${sensor.battery}%<br>
-                            Fecha: ${sensor.last_update}
-                        `);
-                        markers.push(marker);
+                        if (sensor.latitude && sensor.longitude) {
+                            const marker = L.marker([sensor.latitude, sensor.longitude]).addTo(map);
+                            marker.bindPopup(`
+                        <p><strong>${sensor.name}</strong></p>
+                        <p>Último valor: ${sensor.last_value} ${sensor.unit || ''}</p>
+                        <p>Batería: ${sensor.battery || 'N/A'}%</p>
+                        <p>Última actualización: ${sensor.last_update || 'Sin datos'}</p>
+                    `);
+                            markers.push(marker);
+                        }
                     });
                 })
                 .catch(error => {
                     console.error('Error al cargar los sensores:', error);
+                    alert('Ocurrió un error al intentar cargar los datos.');
                 });
         }
+
 
         document.getElementById('applyFilters').addEventListener('click', loadSensors);
     </script>
