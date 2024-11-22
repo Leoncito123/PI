@@ -1,5 +1,5 @@
 <x-layout2>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.54.1"></script>
     <div id="chart"></div>
 
     <script>

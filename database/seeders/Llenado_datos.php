@@ -15,28 +15,30 @@ class Llenado_datos extends Seeder
      */
     public function run(): void
     {
-                // Crear datos
-                $summaries = Summaries::all();
-                foreach ($summaries as $summari) {
-                    for ($i = 0; $i < 10; $i++) {
-                        $messageData = [
-                            'date' => Carbon::now()->format('Y-m-d'),
-                            'time' => Carbon::now()->format('H:i:s'),
-                            'value' => rand(0, 100),
-                            'battery' => rand(0, 100),
-                            'cuadrante' => rand(1, 4)
-                        ];
+        // Crear datos
+        $summaries = Summaries::all();
+        foreach ($summaries as $summari) {
+            for ($i = 0; $i < 10; $i++) {
+                for ($j = 0; $j < 10; $j++) {
+                    $messageData = [
+                        'date' => Carbon::now()->subDays($j)->format('Y-m-d'),
+                        'time' => Carbon::now()->format('H:i:s'),
+                        'value' => rand(0, 100),
+                        'battery' => rand(0, 100),
+                        'cuadrante' => rand(1, 4)
+                    ];
 
-                        Data::create([
-                            'name' => $summari->macaddress->macaddress,
-                            'date' => $messageData['date'],
-                            'time' => $messageData['time'],
-                            'value' => $messageData['value'],
-                            'battery' => $messageData['battery'],
-                            'sector' => $messageData['cuadrante'],
-                            'summary_id' => $summari->id
-                        ]);
-                    }
+                    Data::create([
+                        'name' => $summari->macaddress->macaddress,
+                        'date' => $messageData['date'],
+                        'time' => $messageData['time'],
+                        'value' => $messageData['value'],
+                        'battery' => $messageData['battery'],
+                        'sector' => $messageData['cuadrante'],
+                        'summary_id' => $summari->id
+                    ]);
                 }
+            }
+        }
     }
 }
