@@ -39,7 +39,6 @@ class UbicationController extends Controller
             'sector' => 'required',
             'longitude' => 'required',
             'latitude' => 'required',
-            'supervisor_id' => 'required|exists:users,id'
         ]);
 
         $ubication = Ubication::create([
@@ -48,10 +47,6 @@ class UbicationController extends Controller
             'longitude' => $request->longitude,
             'latitude' => $request->latitude
         ]);
-
-        $supervisor = User::find($request->supervisor_id);
-        $supervisor->ubications()->attach($ubication->id);
-
         return redirect()->route('admin.ubications');
     }
 

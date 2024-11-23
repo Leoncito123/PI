@@ -6,7 +6,7 @@
     </x-slot>
     <div class="flex items-center justify-end mb-4">
         <a href="{{ route('admin.create.user') }}"
-            class="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-700">Crear Tarjetas</a>
+            class="bg-blue-500 text-white p-2 rounded-lg shadow-md hover:bg-blue-700">Crear Usuario</a>
     </div>
     @if (session('success'))
         <script>
