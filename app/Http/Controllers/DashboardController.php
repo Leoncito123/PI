@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Data;
 use App\Models\DismissedAlert;
-use App\Models\Summaries;
 use App\Models\Ubication;
 use App\Models\Type;
-
 
 
 class DashboardController extends Controller
@@ -19,7 +17,7 @@ class DashboardController extends Controller
         $selectedSector = $request->input('sector', 'all');
         $selectedUbication = $request->input('ubication', 'all');
         $selectedType = $request->input('type', 'all');
-        $dateRange = $request->input('date_range', '7');
+        $dateRange = $request->input('date_range', '7'); // Por defecto, últimos 7 días
 
         $query = Data::query()
             ->join('summaries', 'data.summary_id', '=', 'summaries.id')
@@ -39,6 +37,8 @@ class DashboardController extends Controller
         $query->where('data.date', '>=', now()->subDays($dateRange));
 
         $data = $query->select(
+            'data.id',
+            'data.name',
             'data.date',
             'data.value',
             'data.battery',
@@ -50,62 +50,66 @@ class DashboardController extends Controller
             'types.unit'
         )->get();
 
-        // Cálculos de métricas
+        // Calcular valores promedio
         $averageValue = $data->avg('value');
         $averageBattery = $data->avg('battery');
         $totalReadings = $data->count();
 
-        // Agrupación de datos para gráficos
+        // Agrupar valores por fecha
         $valuesByDate = $data->groupBy('date')->map->avg('value');
         $batteryByDate = $data->groupBy('date')->map->avg('battery');
+
+        // Agrupar lecturas por sector
         $readingsBySector = $data->groupBy('sector')->map->count();
 
-        // Filtrados disponibles
-        $sectors = Data::distinct('sector')->pluck('sector');
-        $ubications = Summaries::join('ubications', 'summaries.ubication_id', '=', 'ubications.id')
-            ->distinct()
-            ->pluck('ubications.name', 'ubications.id');
-        $types = Type::pluck('name', 'id');
-
-        // **Alertas**
+        // Obtener las alertas descartadas por el usuario actual
         $dismissedAlerts = DismissedAlert::where('user_id', auth()->id())
             ->get()
             ->map(function ($dismissal) {
-                return $dismissal->type . '_' . $dismissal->sector . '_' . $dismissal->alert_date;
+                $valueKey = 'value_' . $dismissal->sector . '_' . $dismissal->alert_date . '_' . $dismissal->data_id . '_' . $dismissal->name;
+                $batteryKey = 'battery_' . $dismissal->sector . '_' . $dismissal->alert_date . '_' . $dismissal->data_id . '_' . $dismissal->name;
+
+                return [
+                    'value_key' => $valueKey,
+                    'battery_key' => $batteryKey
+                ];
             })
+            ->flatMap(fn($item) => [$item['value_key'], $item['battery_key']])
             ->toArray();
 
         // Alertas
         $alerts = [];
         foreach ($data as $entry) {
-            // Crear identificador único para cada alerta
-            $valueAlertKey = 'value_' . $entry->sector . '_' . $entry->date;
-            $batteryAlertKey = 'battery_' . $entry->sector . '_' . $entry->date;
+            $valueAlertKey = 'value_' . $entry->sector . '_' . $entry->date . '_' . $entry->id . '_' . $entry->name;
+            $batteryAlertKey = 'battery_' . $entry->sector . '_' . $entry->date . '_' . $entry->id . '_' . $entry->name;
 
-            // Comprobar si el valor está fuera del rango permitido
             if (($entry->value < $entry->min_value || $entry->value > $entry->max_value)
                 && !in_array($valueAlertKey, $dismissedAlerts)
             ) {
                 $alerts[] = [
                     'type' => 'value',
-                    'message' => "El valor {$entry->value} {$entry->unit} en el sector {$entry->sector} está fuera del rango permitido ({$entry->min_value}-{$entry->max_value} {$entry->unit}).",
+                    'message' => "El valor {$entry->value} {$entry->unit} del sensor {$entry->name} en el sector {$entry->sector} está fuera del rango permitido ({$entry->min_value}-{$entry->max_value} {$entry->unit}).",
                     'date' => $entry->date,
                     'sector' => $entry->sector,
                     'alert_key' => $valueAlertKey
                 ];
             }
 
-            // Comprobar si la batería está baja
             if ($entry->battery < 20 && !in_array($batteryAlertKey, $dismissedAlerts)) {
                 $alerts[] = [
                     'type' => 'battery',
-                    'message' => "La batería del sensor en el sector {$entry->sector} está baja ({$entry->battery}%).",
+                    'message' => "La batería del sensor {$entry->name} en el sector {$entry->sector} está baja ({$entry->battery}%).",
                     'date' => $entry->date,
                     'sector' => $entry->sector,
                     'alert_key' => $batteryAlertKey
                 ];
             }
         }
+
+        // Obtener listas de sectores, ubicaciones y tipos para los filtros
+        $sectors = Data::select('sector')->distinct()->get();
+        $ubications = Ubication::all();
+        $types = Type::all();
 
         return view('dashboard', compact(
             'data',
