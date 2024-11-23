@@ -25,7 +25,7 @@ class Llenado_datos extends Seeder
                         'time' => Carbon::now()->format('H:i:s'),
                         'value' => rand(0, 100),
                         'battery' => rand(0, 100),
-                        'cuadrante' => rand(1, 4)
+                        'cuadrante' => 'Cuadrante_' . rand(1, 4)
                     ];
 
                     Data::create([
