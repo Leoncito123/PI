@@ -15,10 +15,14 @@
                         class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('admin.ubications')" :active="request()->routeIs('admin.index')"
-                        class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                        {{ __('Administrador') }}
-                    </x-nav-link>
+                    @if (Auth::user()->hasRole('worker'))
+
+                    @else
+                        <x-nav-link :href="route('admin.ubications')" :active="request()->routeIs('admin.index')"
+                            class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                            {{ __('Administrador') }}
+                        </x-nav-link>
+                    @endif
                     <x-nav-link :href="route('map')" :active="request()->routeIs('map')"
                         class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
                         {{ __('Visualizador') }}
