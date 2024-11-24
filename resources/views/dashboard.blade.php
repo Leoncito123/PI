@@ -169,7 +169,7 @@
                         <div class="px-6 py-3 bg-gray-50">
                             <div class="relative">
                                 <select id="chatSector"
-                                    class="w-full appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-8 
+                                    class="w-full appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-8
                                          focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors">
                                     <option value="all">Todos los sectores</option>
                                     @foreach ($sectors as $sector)
@@ -214,12 +214,12 @@
                         <form id="chat-form" class="flex space-x-3">
                             <div class="relative flex-1">
                                 <input type="text" id="question"
-                                    class="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg 
+                                    class="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg
                                              focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors"
                                     placeholder="Escribe tu pregunta aquí...">
                                 <button type="submit"
-                                    class="absolute right-2 top-1/2 transform -translate-y-1/2 
-                                             bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700 
+                                    class="absolute right-2 top-1/2 transform -translate-y-1/2
+                                             bg-indigo-600 text-white p-2 rounded-lg hover:bg-indigo-700
                                              focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all">
                                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -340,7 +340,7 @@
             <div class="flex items-start space-x-3">
                 <div class="h-8 w-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <svg class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4z"/>
                     </svg>
                 </div>
@@ -355,7 +355,7 @@
                 messageDiv.innerHTML = `
             <div class="flex items-center justify-center">
                 <svg class="h-5 w-5 text-red-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 <span>${message}</span>
@@ -426,7 +426,9 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        'Accept': 'application/json', // Asegura la aceptación de JSON
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
                     },
                     body: JSON.stringify({
                         alert_key: alertKey
@@ -434,20 +436,27 @@
                 });
 
                 if (response.ok) {
+                    // Procesar la alerta eliminada
                     const alert = document.getElementById(elementId);
-                    alert.classList.add('removing');
+                    if (alert) {
+                        alert.classList.add('removing');
 
-                    setTimeout(() => {
-                        alert.remove();
-                        // Verificar si no quedan más alertas
-                        const alertsContainer = document.getElementById('alertsContainer');
-                        if (alertsContainer && alertsContainer.children.length === 0) {
-                            alertsContainer.remove();
-                        }
-                    }, 500);
+                        setTimeout(() => {
+                            alert.remove();
+                            // Verificar si no quedan más alertas
+                            const alertsContainer = document.getElementById('alertsContainer');
+                            if (alertsContainer && alertsContainer.children.length === 0) {
+                                alertsContainer.remove();
+                            }
+                        }, 500);
+                    }
+                } else {
+                    // Muestra un mensaje de error si la respuesta no es exitosa
+                    const errorData = await response.json();
+                    console.error('Error al descartar la alerta:', errorData.message || 'Error desconocido.');
                 }
             } catch (error) {
-                console.error('Error al descartar la alerta:', error);
+                console.error('Error al realizar la solicitud de descarte:', error);
             }
         }
     </script>
