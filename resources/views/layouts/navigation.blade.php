@@ -12,19 +12,19 @@
                 <!-- Navigation Links -->
                 <div class="hidden sm:flex sm:space-x-8 sm:ml-10">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
-                        class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                        class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-bold">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     @if (Auth::user()->hasRole('worker'))
 
                     @else
                         <x-nav-link :href="route('admin.ubications')" :active="request()->routeIs('admin.index')"
-                            class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                            class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-bold">
                             {{ __('Administrador') }}
                         </x-nav-link>
                     @endif
                     <x-nav-link :href="route('map')" :active="request()->routeIs('map')"
-                        class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
+                        class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white px-3 py-2 rounded-md text-sm font-bold">
                         {{ __('Visualizador') }}
                     </x-nav-link>
                 </div>
@@ -98,7 +98,7 @@
     <div :class="{ 'block': open, 'hidden': !open }" class="sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')"
-                class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700">
+                class="block px-3 py-2 rounded-md text-base font-bold text-gray-700 hover:text-gray-900 hover:bg-gray-50 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-700">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
             <!-- Add other mobile menu items here -->

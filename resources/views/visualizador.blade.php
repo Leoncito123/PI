@@ -26,7 +26,7 @@
                                 filtros</button>
                         </div>
                     </div>
-                    <div id="map" style="height: 600px;" class="rounded-lg"></div>
+                    <div id="map" style="height: 405px; width: 90%, margin: 0 auto;" class="rounded-lg"></div>
                     <div class="mt-4">
                         <h3 class="text-lg font-semibold mb-2">Ubicaciones</h3>
                         <div id="locationButtons" class="flex flex-wrap gap-2">
